@@ -73,22 +73,6 @@ set omnifunc=syntaxcomplete#Complete
 set completeopt=longest,menuone,preview
 set wildignore+=*.so,*.swp,*.zip,*.class
 
-"let g:neocomplete#enable_at_startup = 1
-""let g:neocomplete#auto_completion_start_length = 0
-"if !exists('g:neocomplete#force_omni_input_patterns')
-"	let g:neocomplete#force_omni_input_patterns = {}
-"endif
-"let g:neocomplete#force_omni_input_patterns.lisp = '[^\(\)\s]'
-"
-"inoremap <expr><TAB>   pumvisible() ? "\<C-n>" : "\<TAB>"
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-"inoremap <expr><C-l>   neocomplete#complete_common_string()
-"inoremap <expr><C-y>   neocomplete#close_popup()
-"inoremap <expr><C-e>   neocomplete#cancel_popup()
-"inoremap <expr><C-y>   neocomplete#close_popup()
-"
-"autocmd FileType lisp setlocal omnifunc=SlimvOmniComplete
-
 """
 " Preview window
 """
@@ -99,7 +83,6 @@ autocmd insertleave * if pumvisible() == 0|pclose|endif " close on leave insert
 " Simple mappings
 """
 nnoremap Y y$
-
 
 """
 " Indentation
@@ -113,14 +96,6 @@ set expandtab
 """
 " Align
 """
-"vnoremap <silent> <Enter> :EasyAlign<Enter>
-"let g:easy_align_delimiters = {
-"\ '"': { 'pattern': '"' },
-"\ '+': { 'pattern': '[+\-\*/]' }
-"\ }
-" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plug>(EasyAlign)
-
 " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
 nmap <Leader>a <Plug>(EasyAlign)
 
@@ -146,6 +121,9 @@ let g:solarized_termcolors=256
 highlight CursorLine guibg=#003C45
 highlight CursorColumn guibg=#003C45
 highlight ExtraWhitespace ctermbg=red guibg=red
+
+highlight SignColumn ctermbg=NONE guibg=NONE
+
 match ExtraWhitespace /\s\+$/
 
 """
@@ -158,16 +136,14 @@ match ExtraWhitespace /\s\+$/
 """
 "set grepprg=grep\ -nH\ $*
 "let g:tex_flavor='latex'
-"let g:Tex_CompileRule_pdf = 'pdflatex --interaction=nonstopmode "$*"'
-"let g:Tex_CompileRule_dvi = 'latex --interaction=nonstopmode "$*"'
+let g:Tex_CompileRule_pdf = 'pdflatex --interaction=nonstopmode "$*"'
+let g:Tex_CompileRule_dvi = 'latex --interaction=nonstopmode "$*"'
 let g:LatexBox_viewer = "open -a Skim"
 let g:LatexBox_latexmk_async = 1
 
 """
 " File Searching
 """
-"let g:ctrlp_cmd = 'CtrlP'
-
 let g:ctrlp_map = '<leader>ff'
 noremap <leader>fb :CtrlPBuffer<CR>
 noremap <leader>fr :CtrlPMRU<CR>
@@ -189,24 +165,12 @@ let g:ctrlp_use_caching = 0
 set grepprg=ag\ --nogroup
 nnoremap <leader>g :set operatorfunc=GrepOperator<CR>g@
 vnoremap <leader>g :<c-u>call GrepOperator(visualmode())<cr>
-"map <Leader>g :grep -r --include='*.<C-R>=expand('%:e')<CR>' '<C-R><C-W>' ./<CR><CR>:cw<CR>
 command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 nnoremap \ :ccl<CR>:Ag<SPACE>''<Left>
-" map <Leader>g :ccl<CR>:Ag<SPACE>'<C-R><C-W>'<CR>
 " set incsearch " Done by sensible
 set ignorecase
 set smartcase
 
-function! AgCtrlP(pattern)
-    redir => results
-    silent grep pattern
-    redir END
-    "echo string(split(results))
-endfunction
-
-function! AgCallback(selected_value) range
-	echo "You selected: " . a:selected_value
-endfunction
 """
 " NetLogo
 """
@@ -218,15 +182,6 @@ au! BufRead,BufNewFile *.nlogo setfiletype nlogo
 set foldmethod=syntax
 set foldcolumn=1
 set foldlevelstart=99
-"
-"let javaScript_fold    = 1         " JavaScript
-"let perl_fold          = 1               " Perl
-"let php_folding        = 1             " PHP
-"let r_syntax_folding   = 1        " R
-"let ruby_fold          = 1               " Ruby
-"let sh_fold_enabled    = 1         " sh
-"let vimsyn_folding     = 'af'       " Vim script
-"let xml_syntax_folding = 1      " XML
 
 """
 " Persistent Undo
@@ -239,7 +194,7 @@ set undofile
 let g:lisp_rainbow=1
 let g:slimv_simple_compl=1
 " Using delimMate for this since this appears to be incompatible with NeoComplete
-let g:paredit_mode=0 
+let g:paredit_mode=0
 
 """
 " Vimwiki
