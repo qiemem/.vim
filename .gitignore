@@ -1,3 +1,6 @@
 bundle
 autoload/plug.vim
 *.swp
+undo/
+backup/
+swap/

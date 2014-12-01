@@ -39,6 +39,7 @@ Plug 'qiemem/grepop'
 Plug 'tacahiroy/ctrlp-funky'
 Plug 'bufkill.vim'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'benmills/vimux'
 
 call plug#end()
 
@@ -52,6 +53,7 @@ source ~/.vim/bundle/tslime.vim/tslime.vim
 
 let mapleader = ","
 set tags=./tags,tags;$HOME
+
 """
 " Use Mouse
 """
@@ -184,9 +186,12 @@ set foldcolumn=1
 set foldlevelstart=99
 
 """
-" Persistent Undo
+" Undo and swap
 """
 set undofile
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
+set undodir=~/.vim/undo//
 
 """
 " SLIMV
@@ -202,3 +207,42 @@ let g:paredit_mode=0
 let g:vimwiki_list = [{'path': '~/Dropbox/notes/',
 			\ 'path_html': '~/Dropbox/notes_html/'}]
 
+"""
+" tmux
+"""
+let g:VimuxOrientation = "h"
+let g:VimuxPromptString = ">>> "
+let g:VimuxHeight = "30"
+
+function! VimuxOperator(type)
+    let saved_register = @@
+    if a:type == 'v'
+        normal! `<v`>y
+    elseif a:type ==# 'char' || a:type ==# 'line'
+        normal! `[v`]y
+    else
+        echo a:type
+        return
+    endif
+
+    call VimuxSendText(@@)
+
+    if @@[strlen(@@) - 1] != "\n" && @@[strlen(@@) - 1] != "\r"
+        call VimuxSendKeys("Enter")
+    endif
+
+    let @@ = saved_register
+endfunction
+
+nnoremap <Leader>tt :set operatorfunc=VimuxOperator<CR>g@
+vnoremap <Leader>tt :<C-U>call VimuxOperator(visualmode())<CR>
+
+noremap <Leader>tp :VimuxPromptCommand<CR>
+noremap <Leader>tl :VimuxRunLastCommand<CR>
+
+noremap <Leader>ts :call VimuxRunCommand("sbt")<CR>
+noremap <Leader>tsc :call VimuxRunCommand("compile")<CR>
+noremap <Leader>tsp :call VimuxRunCommand("package")<CR>
+noremap <Leader>tst :call VimuxRunCommand("test")<CR>
+
+noremap <Leader>ti :call VimuxRunCommand("ipython")<CR>
