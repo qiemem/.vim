@@ -204,14 +204,6 @@ set undodir=~/.vim/undo//
 nnoremap <leader>u :UndotreeToggle<CR>
 
 """
-" SLIMV
-"""
-let g:lisp_rainbow=1
-let g:slimv_simple_compl=1
-" Using delimMate for this since this appears to be incompatible with NeoComplete
-let g:paredit_mode=0
-
-"""
 " Vimwiki
 """
 let g:vimwiki_list = [{'path': '~/Dropbox/notes/',

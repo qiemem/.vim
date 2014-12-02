@@ -1,5 +1,5 @@
 bundle
-autoload/plug.vim
+autoload/plug.vim*
 *.swp
 undo/
 backup/
