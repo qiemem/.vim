@@ -21,7 +21,7 @@ Plug 'leafgarland/typescript-vim'
 Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'junegunn/vim-easy-align'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
-Plug 'fholgado/minibufexpl.vim'
+"Plug 'fholgado/minibufexpl.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vimwiki/vimwiki'
 Plug 'tpope/vim-sensible'
@@ -54,7 +54,7 @@ endif
 
 source ~/.vim/bundle/tslime.vim/tslime.vim
 
-let mapleader = ","
+let mapleader = " "
 set tags=./tags,tags;$HOME
 
 " Delete trailing whitespace on save
@@ -71,6 +71,12 @@ set mouse=a
 set hidden	"Abondaned buffers are hidden instead of destroyed
 noremap <Leader>b :MBEToggle<CR>
 noremap <Leader>t :NERDTreeToggle<CR>
+
+"""
+" Status line
+"""
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 
 """
 " Autocomplete
