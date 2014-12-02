@@ -43,6 +43,7 @@ Plug 'tmux-plugins/vim-tmux'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'bling/vim-airline'
 Plug 'mhinz/vim-signify'
+Plug 'mbbill/undotree'
 
 call plug#end()
 
@@ -200,6 +201,7 @@ set undofile
 set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
+nnoremap <leader>u :UndotreeToggle<CR>
 
 """
 " SLIMV
