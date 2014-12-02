@@ -3,7 +3,7 @@ set nocompatible
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !mkdir -p ~/.vim/autoload
     silent !curl -fLo ~/.vim/autoload/plug.vim
-		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall
 endif
 
@@ -14,7 +14,6 @@ Plug 'qiemem/tslime.vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'gre/play2vim'
 Plug 'kien/ctrlp.vim'
-Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'leshill/vim-json'
 Plug 'walm/jshint.vim'
@@ -40,19 +39,26 @@ Plug 'tacahiroy/ctrlp-funky'
 Plug 'bufkill.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'benmills/vimux'
+Plug 'tmux-plugins/vim-tmux'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'bling/vim-airline'
+Plug 'mhinz/vim-signify'
 
 call plug#end()
 
 filetype indent plugin on
 
 if has("syntax")
-	syntax on
+    syntax on
 endif
 
 source ~/.vim/bundle/tslime.vim/tslime.vim
 
 let mapleader = ","
 set tags=./tags,tags;$HOME
+
+" Delete trailing whitespace on save
+autocmd BufWritePre * %s/\s\+$//e
 
 """
 " Use Mouse
@@ -107,10 +113,10 @@ nmap <Leader>a <Plug>(EasyAlign)
 set number
 set cursorline
 set cursorcolumn
-" set laststatus=2 " Done by sensible
-" set ruler " Done by sensible
+set laststatus=2 " Done by sensible
+set ruler " Done by sensible
 set visualbell
-" set showcmd " Done by sensible
+set showcmd " Done by sensible
 set showmatch
 set guifont=Monaco:h10
 
@@ -119,14 +125,10 @@ set guifont=Monaco:h10
 """
 set background=dark
 colorscheme solarized
-let g:solarized_termcolors=256
-highlight CursorLine guibg=#003C45
-highlight CursorColumn guibg=#003C45
-highlight ExtraWhitespace ctermbg=red guibg=red
 
+" At some point, solarized set this to grey. This looks terrible with both
+" gitgutter and signify.
 highlight SignColumn ctermbg=NONE guibg=NONE
-
-match ExtraWhitespace /\s\+$/
 
 """
 " Encoding stuff
