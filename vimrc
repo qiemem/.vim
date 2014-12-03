@@ -1,4 +1,4 @@
-set nocompatible
+
 
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !mkdir -p ~/.vim/autoload
@@ -65,6 +65,11 @@ autocmd BufWritePre * %s/\s\+$//e
 " Use Mouse
 """
 set mouse=a
+if &term =~ '^screen'
+    " tmux knows the extended mouse mode. This allows you to resize splits
+    " with the mouse in xterm
+    set ttymouse=xterm2
+endif
 
 """
 " Buffer Behavior
