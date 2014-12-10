@@ -20,7 +20,7 @@ Plug 'walm/jshint.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'junegunn/vim-easy-align'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
+Plug 'Valloric/YouCompleteMe'
 "Plug 'fholgado/minibufexpl.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vimwiki/vimwiki'
@@ -44,6 +44,7 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'bling/vim-airline'
 Plug 'mhinz/vim-signify'
 Plug 'mbbill/undotree'
+Plug 'Yggdroot/indentLine'
 
 call plug#end()
 
