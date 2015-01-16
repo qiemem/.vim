@@ -18,7 +18,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'leshill/vim-json'
 Plug 'walm/jshint.vim'
 Plug 'leafgarland/typescript-vim'
-Plug 'LaTeX-Box-Team/LaTeX-Box'
+"Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'junegunn/vim-easy-align'
 Plug 'Valloric/YouCompleteMe'
 "Plug 'fholgado/minibufexpl.vim'
@@ -153,10 +153,13 @@ highlight SignColumn ctermbg=NONE guibg=NONE
 """
 "set grepprg=grep\ -nH\ $*
 "let g:tex_flavor='latex'
-let g:Tex_CompileRule_pdf = 'pdflatex --interaction=nonstopmode "$*"'
-let g:Tex_CompileRule_dvi = 'latex --interaction=nonstopmode "$*"'
-let g:LatexBox_viewer = "open -a Skim"
-let g:LatexBox_latexmk_async = 1
+"let g:Tex_CompileRule_pdf = 'pdflatex --interaction=nonstopmode "$*"'
+"let g:Tex_CompileRule_dvi = 'latex --interaction=nonstopmode "$*"'
+"let g:LatexBox_viewer = "open -a Skim"
+"let g:LatexBox_latexmk_async = 1
+" Replaces latex code with what stuff looks like it... not sure how I feel
+" about it
+let g:tex_conceal = "abdmgs"
 
 """
 " File Searching
