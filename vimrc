@@ -1,5 +1,3 @@
-
-
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !mkdir -p ~/.vim/autoload
     silent !curl -fLo ~/.vim/autoload/plug.vim
@@ -21,7 +19,7 @@ Plug 'leafgarland/typescript-vim'
 "Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'junegunn/vim-easy-align'
 Plug 'Valloric/YouCompleteMe'
-"Plug 'fholgado/minibufexpl.vim'
+Plug 'c9s/vimomni.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vimwiki/vimwiki'
 Plug 'tpope/vim-sensible'
@@ -45,6 +43,7 @@ Plug 'bling/vim-airline'
 Plug 'mhinz/vim-signify'
 Plug 'mbbill/undotree'
 Plug 'Yggdroot/indentLine'
+Plug 'rhysd/clever-f.vim'
 
 call plug#end()
 
@@ -90,9 +89,13 @@ let g:airline#extensions#tabline#enabled = 1
 """
 set wildmode=longest:full,full
 " set wildmenu " Done by sensible
-set omnifunc=syntaxcomplete#Complete
-set completeopt=longest,menuone,preview
+"set omnifunc=syntaxcomplete#Complete
+set completeopt=menuone,preview
 set wildignore+=*.so,*.swp,*.zip,*.class
+"let g:neocomplcache_enable_at_startup = 1
+"let g:neocomplcache_enable_smart_case = 1
+"let g:neocomplcache_filename_include_exprs
+let g:EclimCompletionMethod = 'omnifunc'
 
 """
 " Preview window
@@ -103,7 +106,11 @@ autocmd insertleave * if pumvisible() == 0|pclose|endif " close on leave insert
 """
 " Simple mappings
 """
+" Okay because clever-f
+nnoremap ; :
 nnoremap Y y$
+nnoremap H ^
+nnoremap L $
 
 """
 " Indentation
@@ -131,7 +138,7 @@ set ruler " Done by sensible
 set visualbell
 set showcmd " Done by sensible
 set showmatch
-set guifont=Monaco:h10
+set guifont=Monaco\ for\ Powerline:h10
 
 """
 " Color
@@ -159,7 +166,7 @@ highlight SignColumn ctermbg=NONE guibg=NONE
 "let g:LatexBox_latexmk_async = 1
 " Replaces latex code with what stuff looks like it... not sure how I feel
 " about it
-let g:tex_conceal = "abdmgs"
+let g:tex_conceal = ""
 
 """
 " File Searching
