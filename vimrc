@@ -9,14 +9,14 @@ call plug#begin('~/.vim/bundle')
 
 Plug 'kchmck/vim-coffee-script'
 Plug 'qiemem/tslime.vim'
-Plug 'altercation/vim-colors-solarized'
+Plug 'qiemem/vim-colors-solarized'
 Plug 'gre/play2vim'
 Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'leshill/vim-json'
 Plug 'walm/jshint.vim'
 Plug 'leafgarland/typescript-vim'
-"Plug 'LaTeX-Box-Team/LaTeX-Box'
+Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'junegunn/vim-easy-align'
 Plug 'Valloric/YouCompleteMe'
 Plug 'c9s/vimomni.vim'
@@ -43,7 +43,6 @@ Plug 'bling/vim-airline'
 Plug 'mhinz/vim-signify'
 Plug 'mbbill/undotree'
 Plug 'Yggdroot/indentLine'
-Plug 'rhysd/clever-f.vim'
 
 call plug#end()
 
@@ -60,6 +59,9 @@ set tags=./tags,tags;$HOME
 
 " Delete trailing whitespace on save
 autocmd BufWritePre * %s/\s\+$//e
+
+" Makes files with long lines much, much faster
+nnoremap <leader>ll :syntax off<cr>:syntax on<cr>
 
 """
 " Use Mouse
@@ -96,6 +98,20 @@ set wildignore+=*.so,*.swp,*.zip,*.class
 "let g:neocomplcache_enable_smart_case = 1
 "let g:neocomplcache_filename_include_exprs
 let g:EclimCompletionMethod = 'omnifunc'
+let g:ycm_semantic_triggers =  {
+            \   'c' : ['->', '.'],
+            \   'objc' : ['->', '.'],
+            \   'ocaml' : ['.', '#'],
+            \   'cpp,objcpp' : ['->', '.', '::'],
+            \   'perl' : ['->'],
+            \   'php' : ['->', '::'],
+            \   'cs,java,javascript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+            \   'vim' : ['re![_a-zA-Z]+[_\w]*\.'],
+            \   'ruby' : ['.', '::'],
+            \   'lua' : ['.', ':'],
+            \   'erlang' : [':'],
+            \   'tex' : ['{', '\']
+            \ }
 
 """
 " Preview window
@@ -106,8 +122,6 @@ autocmd insertleave * if pumvisible() == 0|pclose|endif " close on leave insert
 """
 " Simple mappings
 """
-" Okay because clever-f
-nnoremap ; :
 nnoremap Y y$
 nnoremap H ^
 nnoremap L $
@@ -132,7 +146,6 @@ nmap <Leader>a <Plug>(EasyAlign)
 """
 set number
 set cursorline
-set cursorcolumn
 set laststatus=2 " Done by sensible
 set ruler " Done by sensible
 set visualbell
@@ -167,6 +180,7 @@ highlight SignColumn ctermbg=NONE guibg=NONE
 " Replaces latex code with what stuff looks like it... not sure how I feel
 " about it
 let g:tex_conceal = ""
+nnoremap <leader>lp :Latexmk<CR>
 
 """
 " File Searching
@@ -222,8 +236,8 @@ nnoremap <leader>u :UndotreeToggle<CR>
 """
 " Vimwiki
 """
-let g:vimwiki_list = [{'path': '~/Dropbox/notes/',
-			\ 'path_html': '~/Dropbox/notes_html/'}]
+let g:vimwiki_list = [{'path': '~/MEGAsync/notes/',
+			\ 'path_html': '~/MEGAsync/notes_html/'}]
 
 """
 " tmux

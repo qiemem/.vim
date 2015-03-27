@@ -4,3 +4,4 @@ autoload/plug.vim*
 undo/
 backup/
 swap/
+*.un~
