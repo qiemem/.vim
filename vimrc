@@ -8,7 +8,7 @@ endif
 call plug#begin('~/.vim/bundle')
 
 Plug 'kchmck/vim-coffee-script'
-Plug 'qiemem/tslime.vim'
+"Plug 'qiemem/tslime.vim'
 Plug 'qiemem/vim-colors-solarized'
 Plug 'gre/play2vim'
 Plug 'kien/ctrlp.vim'
@@ -43,6 +43,7 @@ Plug 'bling/vim-airline'
 Plug 'mhinz/vim-signify'
 Plug 'mbbill/undotree'
 Plug 'Yggdroot/indentLine'
+Plug 'kana/vim-operator-user'
 
 call plug#end()
 
@@ -52,7 +53,7 @@ if has("syntax")
     syntax on
 endif
 
-source ~/.vim/bundle/tslime.vim/tslime.vim
+"source ~/.vim/bundle/tslime.vim/tslime.vim
 
 let mapleader = " "
 set tags=./tags,tags;$HOME
@@ -278,3 +279,68 @@ noremap <Leader>tsp :call VimuxRunCommand("package")<CR>
 noremap <Leader>tst :call VimuxRunCommand("test")<CR>
 
 noremap <Leader>ti :call VimuxRunCommand("ipython")<CR>
+
+"""
+" terminal
+"""
+
+nnoremap <a-j> <c-w>j
+nnoremap <a-k> <c-w>k
+nnoremap <a-h> <c-w>h
+nnoremap <a-l> <c-w>l
+vnoremap <a-j> <c-\><c-n><c-w>j
+vnoremap <a-k> <c-\><c-n><c-w>k
+vnoremap <a-h> <c-\><c-n><c-w>h
+vnoremap <a-l> <c-\><c-n><c-w>l
+inoremap <a-j> <c-\><c-n><c-w>j
+inoremap <a-k> <c-\><c-n><c-w>k
+inoremap <a-h> <c-\><c-n><c-w>h
+inoremap <a-l> <c-\><c-n><c-w>l
+cnoremap <a-j> <c-\><c-n><c-w>j
+cnoremap <a-k> <c-\><c-n><c-w>k
+cnoremap <a-h> <c-\><c-n><c-w>h
+cnoremap <a-l> <c-\><c-n><c-w>l
+if has('nvim')
+    tnoremap <a-j> <c-\><c-n><c-w>j
+    tnoremap <a-k> <c-\><c-n><c-w>k
+    tnoremap <a-l> <c-\><c-n><c-w>l
+    tnoremap <a-h> <c-\><c-n><c-w>h
+    tnoremap <esc> <c-\><c-n>
+endif
+
+map <leader>sl <Plug>(operator-send-left)
+
+function! ExecuteOnTextObject(type, cmd)
+    let saved_register = @@
+    if a:type == 'v'
+        normal! `<v`>y
+    elseif a:type ==# 'char' || a:type ==# 'line'
+        normal! `[v`]y
+    endif
+
+    execute a:cmd
+
+    let @@ = saved_register
+endfunction
+
+function! SendRightOp(type)
+    call ExecuteOnTextObject(a:type, "normal! \<c-w>lp\<c-w>h")
+endfunction
+function! SendLeftOp(type)
+    call ExecuteOnTextObject(a:type, "normal! \<c-w>hp\<c-w>l")
+endfunction
+function! SendUpOp(type)
+    call ExecuteOnTextObject(a:type, "normal! \<c-w>kp\<c-w>j")
+endfunction
+function! SendDownOp(type)
+    call ExecuteOnTextObject(a:type, "normal! \<c-w>jp\<c-w>k")
+endfunction
+
+nnoremap <Leader>sl :set operatorfunc=SendRightOp<CR>g@
+vnoremap <Leader>sl :<C-U>call SendRightOp(visualmode())<CR>
+nnoremap <Leader>sh :set operatorfunc=SendLeftOp<CR>g@
+vnoremap <Leader>sh :<C-U>call SendLeftOp(visualmode())<CR>
+nnoremap <Leader>sk :set operatorfunc=SendUpOp<CR>g@
+vnoremap <Leader>sk :<C-U>call SendUpOp(visualmode())<CR>
+nnoremap <Leader>sj :set operatorfunc=SendDownOp<CR>g@
+vnoremap <Leader>sj :<C-U>call SendDownOp(visualmode())<CR>
