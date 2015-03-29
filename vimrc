@@ -247,6 +247,7 @@ let g:VimuxOrientation = "h"
 let g:VimuxPromptString = ">>> "
 let g:VimuxHeight = "30"
 
+
 function! VimuxOperator(type)
     let saved_register = @@
     if a:type == 'v'
@@ -323,17 +324,33 @@ function! ExecuteOnTextObject(type, cmd)
     let @@ = saved_register
 endfunction
 
+function! GetTextObject(type)
+    let saved_register = @@
+    if a:type == 'v'
+        normal! `<v`>y
+    elseif a:type ==# 'char' || a:type ==# 'line'
+        normal! `[v`]y
+    endif
+    let text = @@
+    let @@ = saved_register
+    return text
+endfunction
+
+function! SendDirection(type, direction, back)
+    execute "normal! \<c-w>" . a:direction . "i" . GetTextObject(a:type) . "\<c-\>\<c-n>\<c-w>" . a:back
+endfunction
+
 function! SendRightOp(type)
-    call ExecuteOnTextObject(a:type, "normal! \<c-w>lp\<c-w>h")
+    call SendDirection(a:type, 'l', 'h')
 endfunction
 function! SendLeftOp(type)
-    call ExecuteOnTextObject(a:type, "normal! \<c-w>hp\<c-w>l")
+    call SendDirection(a:type, 'h', 'l')
 endfunction
 function! SendUpOp(type)
-    call ExecuteOnTextObject(a:type, "normal! \<c-w>kp\<c-w>j")
+    call SendDirection(a:type, 'k', 'j')
 endfunction
 function! SendDownOp(type)
-    call ExecuteOnTextObject(a:type, "normal! \<c-w>jp\<c-w>k")
+    call SendDirection(a:type, 'j', 'k')
 endfunction
 
 nnoremap <Leader>sl :set operatorfunc=SendRightOp<CR>g@
