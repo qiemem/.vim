@@ -15,7 +15,6 @@ Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'leshill/vim-json'
 Plug 'walm/jshint.vim'
-Plug 'leafgarland/typescript-vim'
 Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'junegunn/vim-easy-align'
 Plug 'Valloric/YouCompleteMe'
@@ -43,7 +42,8 @@ Plug 'bling/vim-airline'
 Plug 'mhinz/vim-signify'
 Plug 'mbbill/undotree'
 Plug 'Yggdroot/indentLine'
-Plug 'kana/vim-operator-user'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+Plug 'derekwyatt/vim-scala'
 
 call plug#end()
 
@@ -78,8 +78,9 @@ endif
 " Buffer Behavior
 """
 set hidden	"Abondaned buffers are hidden instead of destroyed
-noremap <Leader>b :MBEToggle<CR>
 noremap <Leader>t :NERDTreeToggle<CR>
+noremap <leader>bk :bp<bar>bd#<CR>
+
 
 """
 " Status line
@@ -285,28 +286,28 @@ noremap <Leader>ti :call VimuxRunCommand("ipython")<CR>
 " terminal
 """
 
-nnoremap <a-j> <c-w>j
-nnoremap <a-k> <c-w>k
-nnoremap <a-h> <c-w>h
-nnoremap <a-l> <c-w>l
-vnoremap <a-j> <c-\><c-n><c-w>j
-vnoremap <a-k> <c-\><c-n><c-w>k
-vnoremap <a-h> <c-\><c-n><c-w>h
-vnoremap <a-l> <c-\><c-n><c-w>l
-inoremap <a-j> <c-\><c-n><c-w>j
-inoremap <a-k> <c-\><c-n><c-w>k
-inoremap <a-h> <c-\><c-n><c-w>h
-inoremap <a-l> <c-\><c-n><c-w>l
-cnoremap <a-j> <c-\><c-n><c-w>j
-cnoremap <a-k> <c-\><c-n><c-w>k
-cnoremap <a-h> <c-\><c-n><c-w>h
-cnoremap <a-l> <c-\><c-n><c-w>l
+nnoremap <a-j> :TmuxNavigateDown<CR>
+nnoremap <a-k> :TmuxNavigateUp<CR>
+nnoremap <a-h> :TmuxNavigateLeft<CR>
+nnoremap <a-l> :TmuxNavigateRight<CR>
+vnoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
+vnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
+vnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
+vnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
+inoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
+inoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
+inoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
+inoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
+cnoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
+cnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
+cnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
+cnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
 if has('nvim')
-    tnoremap <a-j> <c-\><c-n><c-w>j
-    tnoremap <a-k> <c-\><c-n><c-w>k
-    tnoremap <a-l> <c-\><c-n><c-w>l
-    tnoremap <a-h> <c-\><c-n><c-w>h
-    tnoremap <esc> <c-\><c-n>
+    tnoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
+    tnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
+    tnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
+    tnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
+    tnoremap <ESC><ESC> <C-\><C-n>G:call search(".", "b")<CR>$
 endif
 
 map <leader>sl <Plug>(operator-send-left)
@@ -361,3 +362,18 @@ nnoremap <Leader>sk :set operatorfunc=SendUpOp<CR>g@
 vnoremap <Leader>sk :<C-U>call SendUpOp(visualmode())<CR>
 nnoremap <Leader>sj :set operatorfunc=SendDownOp<CR>g@
 vnoremap <Leader>sj :<C-U>call SendDownOp(visualmode())<CR>
+
+function! Echo(...)
+    echom "echoing"
+    echom join(a:000, ",")
+    echom "done"
+endfunction
+
+function! Stdout(...)
+    echom "stdout"
+    echom join(a:000, ",")
+endfunction
+function! Stderr(...)
+    echom "stderr"
+    echom join(a:000, ",")
+endfunction
