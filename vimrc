@@ -42,7 +42,7 @@ Plug 'bling/vim-airline'
 Plug 'mhinz/vim-signify'
 Plug 'mbbill/undotree'
 Plug 'Yggdroot/indentLine'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+Plug 'qiemem/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'derekwyatt/vim-scala'
 
 call plug#end()
@@ -185,16 +185,68 @@ let g:tex_conceal = ""
 nnoremap <leader>lp :Latexmk<CR>
 
 """
-" File Searching
+" Jumping
 """
-let g:ctrlp_map = '<leader>ff'
-noremap <leader>fb :CtrlPBuffer<CR>
-noremap <leader>fr :CtrlPMRU<CR>
-noremap <leader>ff :CtrlP<CR>
-noremap <leader>fa :CtrlPMixed<CR>
-noremap <leader>fq :ccl<CR>:CtrlPQuickfix<CR>
-noremap <leader>fd :CtrlPFunky<CR>
+"let g:ctrlp_map = '<leader>ff'
+"noremap <leader>fb :CtrlPBuffer<CR>
+"noremap <leader>fr :CtrlPMRU<CR>
+"noremap <leader>ff :CtrlP<CR>
+"noremap <leader>fa :CtrlPMixed<CR>
+"noremap <leader>fq :ccl<CR>:CtrlPQuickfix<CR>
+"noremap <leader>fd :CtrlPFunky<CR>
 
+function! MyFZF(options)
+    call fzf#run(extend({'down': '40%', 'options': '-m', 'sink': 'e'}, a:options, 'force'))
+endfunction
+
+function! BufList()
+  redir => ls
+  silent ls
+  redir END
+  return split(ls, '\n')
+endfunction
+
+function! BufOpen(e)
+  execute 'buffer '. matchstr(a:e, '^[ 0-9]*')
+endfunction
+
+function! BufDelete(e)
+  execute 'bd '. matchstr(a:e, '^[ 0-9]*')
+endfunction
+
+autocmd TermOpen *[FZF]* tnoremap <buffer> <ESC> <C-\><C-n>:bd!
+
+noremap <leader>ff :FZF<CR>
+noremap <leader>fa :call MyFZF({'source': 'ag -u -l'})<CR>
+"noremap <leader>fm :call fzf#run({'source': 'fasd -flR', 'sink': 'e', 'down': '40%'})<CR>
+noremap <leader>fm :call MyFZF({'source': 'fasd -flR'})<CR>
+noremap <leader>fb :call MyFZF({'source': BufList(), 'sink': function('BufOpen')})<CR>
+noremap <leader>fr :call MyFZF({'source': v:oldfiles})<CR>
+noremap <leader>bd :call MyFZF({'source': BufList(), 'sink': function('BufDelete')})<CR>
+
+function! s:line_handler(l)
+  let keys = split(a:l, ':\t')
+  exec 'buf ' . keys[0]
+  exec keys[1]
+  normal! ^zz
+endfunction
+
+function! s:buffer_lines()
+  let res = []
+  for b in filter(range(1, bufnr('$')), 'buflisted(v:val)')
+    call extend(res, map(getbufline(b,0,"$"), 'b . ":\t" . (v:key + 1) . ":\t" . v:val '))
+  endfor
+  return res
+endfunction
+
+command! FZFLines call fzf#run({
+\   'source':  <sid>buffer_lines(),
+\   'sink':    function('<sid>line_handler'),
+\   'options': '--nth=3..',
+\   'down':    '40%'
+\})
+
+noremap <leader>fl :FZFLines<CR>
 
 set wildignore+=*.swp,*/target/*
 
@@ -362,18 +414,3 @@ nnoremap <Leader>sk :set operatorfunc=SendUpOp<CR>g@
 vnoremap <Leader>sk :<C-U>call SendUpOp(visualmode())<CR>
 nnoremap <Leader>sj :set operatorfunc=SendDownOp<CR>g@
 vnoremap <Leader>sj :<C-U>call SendDownOp(visualmode())<CR>
-
-function! Echo(...)
-    echom "echoing"
-    echom join(a:000, ",")
-    echom "done"
-endfunction
-
-function! Stdout(...)
-    echom "stdout"
-    echom join(a:000, ",")
-endfunction
-function! Stderr(...)
-    echom "stderr"
-    echom join(a:000, ",")
-endfunction
