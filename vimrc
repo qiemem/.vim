@@ -11,13 +11,13 @@ Plug 'kchmck/vim-coffee-script'
 "Plug 'qiemem/tslime.vim'
 Plug 'qiemem/vim-colors-solarized'
 Plug 'gre/play2vim'
-Plug 'kien/ctrlp.vim'
-Plug 'tpope/vim-fugitive'
+"Plug 'kien/ctrlp.vim'
+"Plug 'tpope/vim-fugitive'
 Plug 'leshill/vim-json'
 Plug 'walm/jshint.vim'
 Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'junegunn/vim-easy-align'
-Plug 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
 Plug 'c9s/vimomni.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vimwiki/vimwiki'
@@ -28,13 +28,13 @@ Plug 'tommcdo/vim-lion'
 Plug 'wellle/targets.vim'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
+"Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-sleuth'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'qiemem/grepop'
-Plug 'tacahiroy/ctrlp-funky'
+"Plug 'tacahiroy/ctrlp-funky'
 Plug 'bufkill.vim'
-Plug 'terryma/vim-multiple-cursors'
+"Plug 'terryma/vim-multiple-cursors'
 Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'nathanaelkane/vim-indent-guides'
@@ -42,8 +42,9 @@ Plug 'bling/vim-airline'
 Plug 'mhinz/vim-signify'
 Plug 'mbbill/undotree'
 Plug 'Yggdroot/indentLine'
-Plug 'qiemem/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
+"Plug 'junegunn/fzf', { 'dir': '/usr/local/opt/fzf', 'do': 'yes \| ./install' }
 Plug 'derekwyatt/vim-scala'
+"Plug 'osyo-manga/vim-brightest'
 
 call plug#end()
 
@@ -63,6 +64,35 @@ autocmd BufWritePre * %s/\s\+$//e
 
 " Makes files with long lines much, much faster
 nnoremap <leader>ll :syntax off<cr>:syntax on<cr>
+
+
+"""
+" Window/Tmux navigation
+"""
+
+nnoremap <a-j> :TmuxNavigateDown<CR>
+nnoremap <a-k> :TmuxNavigateUp<CR>
+nnoremap <a-h> :TmuxNavigateLeft<CR>
+nnoremap <a-l> :TmuxNavigateRight<CR>
+vnoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
+vnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
+vnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
+vnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
+inoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
+inoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
+inoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
+inoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
+cnoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
+cnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
+cnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
+cnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
+if has('nvim')
+    tnoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
+    tnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
+    tnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
+    tnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
+    tnoremap <ESC><ESC> <C-\><C-n>G:call search(".", "b")<CR>$
+endif
 
 """
 " Use Mouse
@@ -137,6 +167,8 @@ set tabstop=4
 set smartindent
 set expandtab
 
+autocmd FileType vim setlocal shiftwidth=2 tabstop=2
+
 """
 " Align
 """
@@ -153,7 +185,7 @@ set ruler " Done by sensible
 set visualbell
 set showcmd " Done by sensible
 set showmatch
-set guifont=Monaco\ for\ Powerline:h10
+set guifont=Inconsolata-dz\ for\ Powerline:h10
 
 """
 " Color
@@ -163,7 +195,12 @@ colorscheme solarized
 
 " At some point, solarized set this to grey. This looks terrible with both
 " gitgutter and signify.
-highlight SignColumn ctermbg=NONE guibg=NONE
+"highlight SignColumn ctermbg=NONE guibg=NONE
+
+"let g:brightest#enable_on_CursorHold = 0
+"let g:brightest#highlight = {
+"\   "group" : "BrightestReverse"
+"\}
 
 """
 " Encoding stuff
@@ -187,6 +224,7 @@ nnoremap <leader>lp :Latexmk<CR>
 """
 " Jumping
 """
+set rtp+=/usr/local/opt/fzf
 "let g:ctrlp_map = '<leader>ff'
 "noremap <leader>fb :CtrlPBuffer<CR>
 "noremap <leader>fr :CtrlPMRU<CR>
@@ -214,8 +252,6 @@ function! BufDelete(e)
   execute 'bd '. matchstr(a:e, '^[ 0-9]*')
 endfunction
 
-autocmd TermOpen *[FZF]* tnoremap <buffer> <ESC> <C-\><C-n>:bd!
-
 noremap <leader>ff :FZF<CR>
 noremap <leader>fa :call MyFZF({'source': 'ag -u -l'})<CR>
 "noremap <leader>fm :call fzf#run({'source': 'fasd -flR', 'sink': 'e', 'down': '40%'})<CR>
@@ -227,6 +263,13 @@ noremap <leader>bd :call MyFZF({'source': BufList(), 'sink': function('BufDelete
 function! s:line_handler(l)
   let keys = split(a:l, ':\t')
   exec 'buf ' . keys[0]
+  exec keys[1]
+  normal! ^zz
+endfunction
+
+function! s:ag_line_handler(l)
+  let keys = split(a:l, ':')
+  exec 'e ' . keys[0]
   exec keys[1]
   normal! ^zz
 endfunction
@@ -247,6 +290,7 @@ command! FZFLines call fzf#run({
 \})
 
 noremap <leader>fl :FZFLines<CR>
+noremap <leader>fg :call MyFZF({'source': 'ag --nogroup .$', 'sink': function('<sid>ag_line_handler')})<CR>
 
 set wildignore+=*.swp,*/target/*
 
@@ -334,63 +378,32 @@ noremap <Leader>tst :call VimuxRunCommand("test")<CR>
 
 noremap <Leader>ti :call VimuxRunCommand("ipython")<CR>
 
-"""
-" terminal
-"""
-
-nnoremap <a-j> :TmuxNavigateDown<CR>
-nnoremap <a-k> :TmuxNavigateUp<CR>
-nnoremap <a-h> :TmuxNavigateLeft<CR>
-nnoremap <a-l> :TmuxNavigateRight<CR>
-vnoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
-vnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
-vnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
-vnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
-inoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
-inoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
-inoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
-inoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
-cnoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
-cnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
-cnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
-cnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
-if has('nvim')
-    tnoremap <a-j> <c-\><c-n>:TmuxNavigateDown<CR>
-    tnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
-    tnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
-    tnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
-    tnoremap <ESC><ESC> <C-\><C-n>G:call search(".", "b")<CR>$
-endif
+""
+" Term interaction
+""
+function! s:GetVisual()
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][:col2 - 2]
+  let lines[0] = lines[0][col1 - 1:]
+  return lines
+endfunction
 
 map <leader>sl <Plug>(operator-send-left)
 
-function! ExecuteOnTextObject(type, cmd)
-    let saved_register = @@
+function! s:GetTextObject(type)
     if a:type == 'v'
-        normal! `<v`>y
+        "normal! `<v`>
     elseif a:type ==# 'char' || a:type ==# 'line'
-        normal! `[v`]y
+        normal! `[v`]
     endif
-
-    execute a:cmd
-
-    let @@ = saved_register
-endfunction
-
-function! GetTextObject(type)
-    let saved_register = @@
-    if a:type == 'v'
-        normal! `<v`>y
-    elseif a:type ==# 'char' || a:type ==# 'line'
-        normal! `[v`]y
-    endif
-    let text = @@
-    let @@ = saved_register
-    return text
+    return s:GetVisual()
 endfunction
 
 function! SendDirection(type, direction, back)
-    execute "normal! \<c-w>" . a:direction . "i" . GetTextObject(a:type) . "\<c-\>\<c-n>\<c-w>" . a:back
+    let text = join(s:GetTextObject(a:type), "\n")
+    execute "normal! \<c-w>" . a:direction . "i" . text . "\<c-\>\<c-n>\<c-w>" . a:back
 endfunction
 
 function! SendRightOp(type)
