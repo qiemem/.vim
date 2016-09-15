@@ -8,16 +8,12 @@ endif
 call plug#begin('~/.vim/bundle')
 
 Plug 'kchmck/vim-coffee-script'
-"Plug 'qiemem/tslime.vim'
 Plug 'qiemem/vim-colors-solarized'
 Plug 'gre/play2vim'
-"Plug 'kien/ctrlp.vim'
-"Plug 'tpope/vim-fugitive'
 Plug 'leshill/vim-json'
 Plug 'walm/jshint.vim'
 Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'junegunn/vim-easy-align'
-"Plug 'Valloric/YouCompleteMe'
 Plug 'c9s/vimomni.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vimwiki/vimwiki'
@@ -28,23 +24,22 @@ Plug 'tommcdo/vim-lion'
 Plug 'wellle/targets.vim'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'godlygeek/tabular'
-"Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-sleuth'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'qiemem/grepop'
-"Plug 'tacahiroy/ctrlp-funky'
 Plug 'bufkill.vim'
-"Plug 'terryma/vim-multiple-cursors'
 Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'bling/vim-airline'
-Plug 'mhinz/vim-signify'
+Plug 'airblade/vim-gitgutter'
 Plug 'mbbill/undotree'
 Plug 'Yggdroot/indentLine'
-"Plug 'junegunn/fzf', { 'dir': '/usr/local/opt/fzf', 'do': 'yes \| ./install' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'derekwyatt/vim-scala'
-"Plug 'osyo-manga/vim-brightest'
+Plug 'jceb/vim-orgmode'
+Plug 'tpope/vim-speeddating'
 
 call plug#end()
 
@@ -57,6 +52,7 @@ endif
 "source ~/.vim/bundle/tslime.vim/tslime.vim
 
 let mapleader = " "
+let maplocalleader = " "
 set tags=./tags,tags;$HOME
 
 " Delete trailing whitespace on save
@@ -65,6 +61,7 @@ autocmd BufWritePre * %s/\s\+$//e
 " Makes files with long lines much, much faster
 nnoremap <leader>ll :syntax off<cr>:syntax on<cr>
 
+set clipboard=unnamed ",unnamedplus
 
 """
 " Window/Tmux navigation
@@ -91,7 +88,7 @@ if has('nvim')
     tnoremap <a-k> <c-\><c-n>:TmuxNavigateUp<CR>
     tnoremap <a-h> <c-\><c-n>:TmuxNavigateLeft<CR>
     tnoremap <a-l> <c-\><c-n>:TmuxNavigateRight<CR>
-    tnoremap <ESC><ESC> <C-\><C-n>G:call search(".", "b")<CR>$
+    "tnoremap <ESC><ESC> <C-\><C-n>G:call search(".", "b")<CR>$
 endif
 
 """
@@ -148,8 +145,13 @@ let g:ycm_semantic_triggers =  {
 """
 " Preview window
 """
-autocmd cursormovedi * if pumvisible() == 0|pclose|endif " close if cursor moves
-autocmd insertleave * if pumvisible() == 0|pclose|endif " close on leave insert
+"autocmd cursormovedi * if pumvisible() == 0|pclose|endif " close if cursor moves
+"autocmd insertleave * if pumvisible() == 0|pclose|endif " close on leave insert
+
+"""
+" Quickfix
+"""
+call rpcstart('sarsi-nvim')
 
 """
 " Simple mappings
@@ -193,14 +195,6 @@ set guifont=Inconsolata-dz\ for\ Powerline:h10
 set background=dark
 colorscheme solarized
 
-" At some point, solarized set this to grey. This looks terrible with both
-" gitgutter and signify.
-"highlight SignColumn ctermbg=NONE guibg=NONE
-
-"let g:brightest#enable_on_CursorHold = 0
-"let g:brightest#highlight = {
-"\   "group" : "BrightestReverse"
-"\}
 
 """
 " Encoding stuff
@@ -210,93 +204,32 @@ colorscheme solarized
 """
 " LaTeX
 """
-"set grepprg=grep\ -nH\ $*
-"let g:tex_flavor='latex'
-"let g:Tex_CompileRule_pdf = 'pdflatex --interaction=nonstopmode "$*"'
-"let g:Tex_CompileRule_dvi = 'latex --interaction=nonstopmode "$*"'
-"let g:LatexBox_viewer = "open -a Skim"
-"let g:LatexBox_latexmk_async = 1
-" Replaces latex code with what stuff looks like it... not sure how I feel
-" about it
 let g:tex_conceal = ""
 nnoremap <leader>lp :Latexmk<CR>
 
 """
 " Jumping
 """
-set rtp+=/usr/local/opt/fzf
-"let g:ctrlp_map = '<leader>ff'
-"noremap <leader>fb :CtrlPBuffer<CR>
-"noremap <leader>fr :CtrlPMRU<CR>
-"noremap <leader>ff :CtrlP<CR>
-"noremap <leader>fa :CtrlPMixed<CR>
-"noremap <leader>fq :ccl<CR>:CtrlPQuickfix<CR>
-"noremap <leader>fd :CtrlPFunky<CR>
 
 function! MyFZF(options)
     call fzf#run(extend({'down': '40%', 'options': '-m', 'sink': 'e'}, a:options, 'force'))
 endfunction
 
-function! BufList()
-  redir => ls
-  silent ls
-  redir END
-  return split(ls, '\n')
-endfunction
-
-function! BufOpen(e)
-  execute 'buffer '. matchstr(a:e, '^[ 0-9]*')
-endfunction
-
-function! BufDelete(e)
-  execute 'bd '. matchstr(a:e, '^[ 0-9]*')
-endfunction
-
-noremap <leader>ff :FZF<CR>
+noremap <leader>ff :Files<CR>
+noremap <leader>fb :Buffers<CR>
+noremap <leader>/ :execute 'Ag ' . input('Ag/')<CR>
+noremap <leader>fl :Lines<CR>
+noremap <leader>f/ :BLines<CR>
+noremap <leader>fm :Marks<CR>
+noremap <leader>fr :History<CR>
+noremap <leader>f: :History:<CR>
+noremap <leader>fc :Commands<CR>
 noremap <leader>fa :call MyFZF({'source': 'ag -u -l'})<CR>
-"noremap <leader>fm :call fzf#run({'source': 'fasd -flR', 'sink': 'e', 'down': '40%'})<CR>
-noremap <leader>fm :call MyFZF({'source': 'fasd -flR'})<CR>
-noremap <leader>fb :call MyFZF({'source': BufList(), 'sink': function('BufOpen')})<CR>
-noremap <leader>fr :call MyFZF({'source': v:oldfiles})<CR>
-noremap <leader>bd :call MyFZF({'source': BufList(), 'sink': function('BufDelete')})<CR>
+noremap <leader>fg :GitFiles<CR>
 
-function! s:line_handler(l)
-  let keys = split(a:l, ':\t')
-  exec 'buf ' . keys[0]
-  exec keys[1]
-  normal! ^zz
-endfunction
-
-function! s:ag_line_handler(l)
-  let keys = split(a:l, ':')
-  exec 'e ' . keys[0]
-  exec keys[1]
-  normal! ^zz
-endfunction
-
-function! s:buffer_lines()
-  let res = []
-  for b in filter(range(1, bufnr('$')), 'buflisted(v:val)')
-    call extend(res, map(getbufline(b,0,"$"), 'b . ":\t" . (v:key + 1) . ":\t" . v:val '))
-  endfor
-  return res
-endfunction
-
-command! FZFLines call fzf#run({
-\   'source':  <sid>buffer_lines(),
-\   'sink':    function('<sid>line_handler'),
-\   'options': '--nth=3..',
-\   'down':    '40%'
-\})
-
-noremap <leader>fl :FZFLines<CR>
-noremap <leader>fg :call MyFZF({'source': 'ag --nogroup .$', 'sink': function('<sid>ag_line_handler')})<CR>
+imap <C-x><C-l> <plug>(fzf-complete-line)
 
 set wildignore+=*.swp,*/target/*
-
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-" ag is fast enough we don't need to cache
-let g:ctrlp_use_caching = 0
 
 """
 " Searching
@@ -304,8 +237,6 @@ let g:ctrlp_use_caching = 0
 set grepprg=ag\ --nogroup
 nnoremap <leader>g :set operatorfunc=GrepOperator<CR>g@
 vnoremap <leader>g :<c-u>call GrepOperator(visualmode())<cr>
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-nnoremap \ :ccl<CR>:Ag<SPACE>''<Left>
 " set incsearch " Done by sensible
 set ignorecase
 set smartcase
@@ -319,16 +250,15 @@ au! BufRead,BufNewFile *.nlogo setfiletype nlogo
 " Code Folding
 """
 set foldmethod=syntax
-set foldcolumn=1
 set foldlevelstart=99
 
 """
 " Undo and swap
 """
 set undofile
-set backupdir=~/.vim/backup//
-set directory=~/.vim/swap//
-set undodir=~/.vim/undo//
+set backupdir=~/.config/nvim/backup//
+set directory=~/.config/nvim/swap//
+set undodir=~/.config/nvim/undo//
 nnoremap <leader>u :UndotreeToggle<CR>
 
 """
