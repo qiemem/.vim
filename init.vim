@@ -120,27 +120,8 @@ let g:airline#extensions#tabline#enabled = 1
 """
 set wildmode=longest:full,full
 " set wildmenu " Done by sensible
-"set omnifunc=syntaxcomplete#Complete
 set completeopt=menuone,preview
 set wildignore+=*.so,*.swp,*.zip,*.class
-"let g:neocomplcache_enable_at_startup = 1
-"let g:neocomplcache_enable_smart_case = 1
-"let g:neocomplcache_filename_include_exprs
-let g:EclimCompletionMethod = 'omnifunc'
-let g:ycm_semantic_triggers =  {
-            \   'c' : ['->', '.'],
-            \   'objc' : ['->', '.'],
-            \   'ocaml' : ['.', '#'],
-            \   'cpp,objcpp' : ['->', '.', '::'],
-            \   'perl' : ['->'],
-            \   'php' : ['->', '::'],
-            \   'cs,java,javascript,d,python,perl6,scala,vb,elixir,go' : ['.'],
-            \   'vim' : ['re![_a-zA-Z]+[_\w]*\.'],
-            \   'ruby' : ['.', '::'],
-            \   'lua' : ['.', ':'],
-            \   'erlang' : [':'],
-            \   'tex' : ['{', '\']
-            \ }
 
 """
 " Preview window
@@ -182,10 +163,10 @@ nmap <Leader>a <Plug>(EasyAlign)
 """
 set number
 set cursorline
-set laststatus=2 " Done by sensible
-set ruler " Done by sensible
+"set laststatus=2 " Done by sensible
+"set ruler " Done by sensible
 set visualbell
-set showcmd " Done by sensible
+"set showcmd " Done by sensible
 set showmatch
 set guifont=Inconsolata-dz\ for\ Powerline:h10
 
