@@ -9,9 +9,7 @@ call plug#begin('~/.vim/bundle')
 
 Plug 'kchmck/vim-coffee-script'
 Plug 'qiemem/vim-colors-solarized'
-Plug 'gre/play2vim'
 Plug 'leshill/vim-json'
-Plug 'walm/jshint.vim'
 Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'junegunn/vim-easy-align'
 Plug 'c9s/vimomni.vim'
@@ -34,7 +32,6 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'bling/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'mbbill/undotree'
-Plug 'Yggdroot/indentLine'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'derekwyatt/vim-scala'
@@ -175,6 +172,10 @@ set guifont=Inconsolata-dz\ for\ Powerline:h10
 """
 set background=dark
 colorscheme solarized
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=DarkGray   ctermbg=8
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=Black ctermbg=0
 
 
 """
