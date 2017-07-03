@@ -10,12 +10,14 @@ call plug#begin('~/.vim/bundle')
 Plug 'kchmck/vim-coffee-script'
 Plug 'qiemem/vim-colors-solarized'
 Plug 'leshill/vim-json'
-Plug 'LaTeX-Box-Team/LaTeX-Box'
+Plug 'lervag/vimtex'
 Plug 'junegunn/vim-easy-align'
 Plug 'c9s/vimomni.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vimwiki/vimwiki'
-Plug 'tpope/vim-sensible'
+if !has('nvim')
+  Plug 'tpope/vim-sensible'
+endif
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tommcdo/vim-lion'
@@ -25,7 +27,7 @@ Plug 'godlygeek/tabular'
 Plug 'tpope/vim-sleuth'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'qiemem/grepop'
-Plug 'bufkill.vim'
+Plug 'qpkorr/vim-bufkill'
 Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'nathanaelkane/vim-indent-guides'
@@ -37,6 +39,20 @@ Plug 'junegunn/fzf.vim'
 Plug 'derekwyatt/vim-scala'
 Plug 'jceb/vim-orgmode'
 Plug 'tpope/vim-speeddating'
+Plug 'metakirby5/codi.vim'
+Plug 'chrisbra/improvedft'
+Plug 'vim-voom/VOoM'
+"Plug 'w0rp/ale'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'neomake/neomake'
+"Plug 'vim-pandoc/vim-pandoc'
+Plug 'junegunn/goyo.vim'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-easytags'
+"Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'zchee/deoplete-jedi'
+Plug 'Vimjas/vim-python-pep8-indent'
 
 call plug#end()
 
@@ -56,7 +72,8 @@ set tags=./tags,tags;$HOME
 autocmd BufWritePre * %s/\s\+$//e
 
 " Makes files with long lines much, much faster
-nnoremap <leader>ll :syntax off<cr>:syntax on<cr>
+" Don't think this is needed anymore
+"nnoremap <leader>ll :syntax off<cr>:syntax on<cr>
 
 set clipboard=unnamed ",unnamedplus
 
@@ -117,8 +134,13 @@ let g:airline#extensions#tabline#enabled = 1
 """
 set wildmode=longest:full,full
 " set wildmenu " Done by sensible
-set completeopt=menuone,preview
+set wildignorecase
+
+set completeopt=longest,menuone
 set wildignore+=*.so,*.swp,*.zip,*.class
+
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
 
 """
 " Preview window
@@ -130,6 +152,10 @@ set wildignore+=*.so,*.swp,*.zip,*.class
 " Quickfix
 """
 call rpcstart('sarsi-nvim')
+
+let g:ale_linters = {
+\   'pandoc': ['proselint'],
+\}
 
 """
 " Simple mappings
@@ -188,10 +214,29 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=Black ctermbg=0
 """
 let g:tex_conceal = ""
 nnoremap <leader>lp :Latexmk<CR>
+"let g:LatexBox_latexmk_async=1
+"let g:LatexBox_latexmk_preview_continuously=1
+"let g:LatexBox_quickfix=4
+let g:vimtex_imaps_enabled = 0
+
+"""
+" Markdown
+"""
+
+"let g:pandoc#syntax#conceal#use = 0
+"let g:pandoc#command#autoexec_command = "Pandoc pdf -F pandoc-crossref -N"
+"let g:pandoc#command#autoexec_on_writes = 1
 
 """
 " Jumping
 """
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
 
 function! MyFZF(options)
     call fzf#run(extend({'down': '40%', 'options': '-m', 'sink': 'e'}, a:options, 'force'))
@@ -199,14 +244,14 @@ endfunction
 
 noremap <leader>ff :Files<CR>
 noremap <leader>fb :Buffers<CR>
-noremap <leader>/ :execute 'Ag ' . input('Ag/')<CR>
+noremap <leader>/ :execute 'Rg ' . input('Rg/')<CR>
 noremap <leader>fl :Lines<CR>
 noremap <leader>f/ :BLines<CR>
 noremap <leader>fm :Marks<CR>
 noremap <leader>fr :History<CR>
 noremap <leader>f: :History:<CR>
 noremap <leader>fc :Commands<CR>
-noremap <leader>fa :call MyFZF({'source': 'ag -u -l'})<CR>
+noremap <leader>fa :call MyFZF({'source': 'rg -u -l'})<CR>
 noremap <leader>fg :GitFiles<CR>
 
 imap <C-x><C-l> <plug>(fzf-complete-line)
@@ -216,12 +261,22 @@ set wildignore+=*.swp,*/target/*
 """
 " Searching
 """
+"set grepprg=rg\ --no-heading\ --column\ --line-number\ --color=never
 set grepprg=ag\ --nogroup
-nnoremap <leader>g :set operatorfunc=GrepOperator<CR>g@
-vnoremap <leader>g :<c-u>call GrepOperator(visualmode())<cr>
+" nnoremap <leader>g :set operatorfunc=GrepOperator<CR>g@
+" vnoremap <leader>g :<c-u>call GrepOperator(visualmode())<cr>
 " set incsearch " Done by sensible
 set ignorecase
 set smartcase
+
+"""
+" Substition
+"""
+set inccommand=split
+
+"""
+" git
+"""
 
 """
 " NetLogo
@@ -248,6 +303,34 @@ nnoremap <leader>u :UndotreeToggle<CR>
 """
 let g:vimwiki_list = [{'path': '~/MEGAsync/notes/',
 			\ 'path_html': '~/MEGAsync/notes_html/'}]
+
+"""
+" Codi
+"""
+
+let g:codi#interpreters = {
+      \ 'scala': {
+        \ 'bin': 'scala',
+        \ 'prompt': '^\(scala>\|     |\) ',
+      \ },
+      \ 'python': {
+        \ 'bin': 'python3',
+        \ 'prompt': '^\(>>>\|\.\.\.\) ',
+      \ },
+  \ }
+
+"""
+" Syntax checking
+"""
+
+nnoremap <leader>an :ALENextWrap<CR>
+nnoremap <leader>ap :ALEPreviousWrap<CR>
+
+"""
+" Focusing
+"""
+
+let g:goyo_linenr=1
 
 """
 " tmux
@@ -339,3 +422,5 @@ nnoremap <Leader>sk :set operatorfunc=SendUpOp<CR>g@
 vnoremap <Leader>sk :<C-U>call SendUpOp(visualmode())<CR>
 nnoremap <Leader>sj :set operatorfunc=SendDownOp<CR>g@
 vnoremap <Leader>sj :<C-U>call SendDownOp(visualmode())<CR>
+
+:let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
