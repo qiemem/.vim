@@ -8,7 +8,7 @@ endif
 call plug#begin('~/.vim/bundle')
 
 Plug 'kchmck/vim-coffee-script'
-Plug 'qiemem/vim-colors-solarized'
+Plug 'frankier/neovim-colors-solarized-truecolor-only'
 Plug 'leshill/vim-json'
 Plug 'lervag/vimtex'
 Plug 'junegunn/vim-easy-align'
@@ -50,9 +50,12 @@ Plug 'junegunn/goyo.vim'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
 "Plug 'Shougo/deoplete.nvim'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'zchee/deoplete-jedi'
+"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Plug 'zchee/deoplete-jedi'
+"Plug 'davidhalter/jedi-vim'
+Plug 'maralla/completor.vim'
 Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 
@@ -142,6 +145,8 @@ set wildignore+=*.so,*.swp,*.zip,*.class
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 
+let g:completor_python_binary = '/usr/local/bin/python3'
+
 """
 " Preview window
 """
@@ -151,11 +156,15 @@ let g:deoplete#enable_smart_case = 1
 """
 " Quickfix
 """
-call rpcstart('sarsi-nvim')
 
 let g:ale_linters = {
 \   'pandoc': ['proselint'],
 \}
+
+"""
+" Tags
+"""
+let g:easytags_async = 1
 
 """
 " Simple mappings
@@ -184,6 +193,7 @@ nmap <Leader>a <Plug>(EasyAlign)
 """
 " View
 """
+set lazyredraw
 set number
 set cursorline
 "set laststatus=2 " Done by sensible
@@ -191,17 +201,21 @@ set cursorline
 set visualbell
 "set showcmd " Done by sensible
 set showmatch
-set guifont=Inconsolata-dz\ for\ Powerline:h10
+if !has('gui_vimr')
+  set guifont=Inconsolata-dz\ for\ Powerline:h10
+endif
 
 """
 " Color
 """
+set termguicolors
 set background=dark
 colorscheme solarized
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=DarkGray   ctermbg=8
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=Black ctermbg=0
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=DarkGray   ctermbg=8
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=Black ctermbg=0
+"let g:solarized_diffmode="normal"
 
 
 """
@@ -223,7 +237,7 @@ let g:vimtex_imaps_enabled = 0
 " Markdown
 """
 
-"let g:pandoc#syntax#conceal#use = 0
+let g:pandoc#syntax#conceal#use = 0
 "let g:pandoc#command#autoexec_command = "Pandoc pdf -F pandoc-crossref -N"
 "let g:pandoc#command#autoexec_on_writes = 1
 
@@ -253,6 +267,8 @@ noremap <leader>f: :History:<CR>
 noremap <leader>fc :Commands<CR>
 noremap <leader>fa :call MyFZF({'source': 'rg -u -l'})<CR>
 noremap <leader>fg :GitFiles<CR>
+noremap <leader>ft :Tags<CR>
+noremap <leader>fj :BTags<CR>
 
 imap <C-x><C-l> <plug>(fzf-complete-line)
 
@@ -272,7 +288,9 @@ set smartcase
 """
 " Substition
 """
-set inccommand=split
+if has('nvim')
+  set inccommand=split
+endif
 
 """
 " git
@@ -355,6 +373,7 @@ function! VimuxOperator(type)
 
     if @@[strlen(@@) - 1] != "\n" && @@[strlen(@@) - 1] != "\r"
         call VimuxSendKeys("Enter")
+        call VimuxSendKeys("Enter")
     endif
 
     let @@ = saved_register
@@ -372,6 +391,15 @@ noremap <Leader>tsp :call VimuxRunCommand("package")<CR>
 noremap <Leader>tst :call VimuxRunCommand("test")<CR>
 
 noremap <Leader>ti :call VimuxRunCommand("ipython")<CR>
+
+let g:cellmode_default_mappings='0'
+let g:cellmode_tmux_panenumber='2'
+
+noremap <leader>cb :call RunTmuxPythonCell(0)<Enter>
+noremap <leader>cg :call RunTmuxPythonCell(1)<Enter>
+noremap <leader>cc :call RunTmuxPythonChunk()<Enter>
+noremap <leader>cl :call RunTmuxPythonLine()<Enter>
+
 
 ""
 " Term interaction
@@ -424,3 +452,5 @@ nnoremap <Leader>sj :set operatorfunc=SendDownOp<CR>g@
 vnoremap <Leader>sj :<C-U>call SendDownOp(visualmode())<CR>
 
 :let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+
+let g:jedi#force_py_version = 3
