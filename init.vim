@@ -7,8 +7,10 @@ endif
 
 call plug#begin('~/.vim/bundle')
 
-Plug 'kchmck/vim-coffee-script'
-Plug 'frankier/neovim-colors-solarized-truecolor-only'
+"Plug 'kchmck/vim-coffee-script'
+"Plug 'frankier/neovim-colors-solarized-truecolor-only'
+Plug 'kshenoy/vim-signature'
+Plug 'iCyMind/NeoSolarized'
 Plug 'leshill/vim-json'
 Plug 'lervag/vimtex'
 Plug 'junegunn/vim-easy-align'
@@ -42,20 +44,29 @@ Plug 'tpope/vim-speeddating'
 Plug 'metakirby5/codi.vim'
 Plug 'chrisbra/improvedft'
 Plug 'vim-voom/VOoM'
-"Plug 'w0rp/ale'
+Plug 'w0rp/ale'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'neomake/neomake'
+"Plug 'neomake/neomake'
 "Plug 'vim-pandoc/vim-pandoc'
 Plug 'junegunn/goyo.vim'
 Plug 'xolox/vim-misc'
-Plug 'xolox/vim-easytags'
+"Plug 'xolox/vim-easytags'
 "Plug 'Shougo/deoplete.nvim'
 "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "Plug 'zchee/deoplete-jedi'
-"Plug 'davidhalter/jedi-vim'
-Plug 'maralla/completor.vim'
+Plug 'davidhalter/jedi-vim'
+"Plug 'maralla/completor.vim'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'sheerun/vim-polyglot'
+Plug 'digitaltoad/vim-pug'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'roxma/nvim-completion-manager'
+Plug 'roxma/ncm-clang'
+if !has('nvim')
+    Plug 'roxma/vim-hug-neovim-rpc'
+endif
+"Plug 'terryma/vim-smooth-scroll'
+"Plug 'yuttie/comfortable-motion.vim'
 
 call plug#end()
 
@@ -142,8 +153,8 @@ set wildignorecase
 set completeopt=longest,menuone
 set wildignore+=*.so,*.swp,*.zip,*.class
 
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
+"let g:deoplete#enable_at_startup = 1
+"let g:deoplete#enable_smart_case = 1
 
 let g:completor_python_binary = '/usr/local/bin/python3'
 
@@ -159,12 +170,17 @@ let g:completor_python_binary = '/usr/local/bin/python3'
 
 let g:ale_linters = {
 \   'pandoc': ['proselint'],
+\   'cpp': ['clang'],
 \}
+autocmd BufEnter *.cpp,*.h,*.hpp,*.hxx let g:ale_cpp_clang_options = join(ncm_clang#compilation_info()['args'], ' ')
+
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
 
 """
 " Tags
 """
-let g:easytags_async = 1
+"let g:easytags_async = 1
 
 """
 " Simple mappings
@@ -210,7 +226,7 @@ endif
 """
 set termguicolors
 set background=dark
-colorscheme solarized
+colorscheme NeoSolarized
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_auto_colors = 0
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=DarkGray   ctermbg=8
@@ -232,6 +248,7 @@ nnoremap <leader>lp :Latexmk<CR>
 "let g:LatexBox_latexmk_preview_continuously=1
 "let g:LatexBox_quickfix=4
 let g:vimtex_imaps_enabled = 0
+let g:polyglot_disabled = ['latex']
 
 """
 " Markdown
@@ -255,6 +272,11 @@ command! -bang -nargs=* Rg
 function! MyFZF(options)
     call fzf#run(extend({'down': '40%', 'options': '-m', 'sink': 'e'}, a:options, 'force'))
 endfunction
+
+"let g:fzf_layout = { 'up': '~40%' }
+autocmd! FileType fzf
+autocmd  FileType fzf set laststatus=0 noshowmode noruler
+            \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
 noremap <leader>ff :Files<CR>
 noremap <leader>fb :Buffers<CR>
@@ -454,3 +476,4 @@ vnoremap <Leader>sj :<C-U>call SendDownOp(visualmode())<CR>
 :let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
 let g:jedi#force_py_version = 3
+let g:jedi#completions_enabled = 0
