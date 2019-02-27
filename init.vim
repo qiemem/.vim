@@ -33,7 +33,7 @@ Plug 'qpkorr/vim-bufkill'
 Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'bling/vim-airline'
+"Plug 'bling/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'mbbill/undotree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -60,8 +60,11 @@ Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'sheerun/vim-polyglot'
 Plug 'digitaltoad/vim-pug'
 Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'roxma/nvim-completion-manager'
-Plug 'roxma/ncm-clang'
+"Plug 'roxma/nvim-completion-manager'
+"Plug 'roxma/ncm-clang'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
+Plug 'HansPinckaers/ncm2-jedi'
 if !has('nvim')
     Plug 'roxma/vim-hug-neovim-rpc'
 endif
@@ -150,13 +153,23 @@ set wildmode=longest:full,full
 " set wildmenu " Done by sensible
 set wildignorecase
 
-set completeopt=longest,menuone
+"set completeopt=longest,menuone,noselect,noinsert
+set completeopt=menuone,noselect,noinsert
 set wildignore+=*.so,*.swp,*.zip,*.class
 
 "let g:deoplete#enable_at_startup = 1
 "let g:deoplete#enable_smart_case = 1
 
 let g:completor_python_binary = '/usr/local/bin/python3'
+
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set shortmess+=c
+inoremap <c-c> <ESC>
+" make it fast
+let ncm2#popup_delay = 5
+let ncm2#complete_length = [[1, 1]]
+" Use new fuzzy based matches
+"let g:ncm2#matcher = 'substrfuzzy'
 
 """
 " Preview window
@@ -477,3 +490,9 @@ vnoremap <Leader>sj :<C-U>call SendDownOp(visualmode())<CR>
 
 let g:jedi#force_py_version = 3
 let g:jedi#completions_enabled = 0
+let g:jedi#auto_initialization = 1
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#smart_auto_mappings = 0
+let g:jedi#popup_on_dot = 0
+let g:jedi#completions_command = ""
+let g:jedi#show_call_signatures = "1"
