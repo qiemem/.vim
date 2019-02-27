@@ -16,7 +16,6 @@ Plug 'lervag/vimtex'
 Plug 'junegunn/vim-easy-align'
 Plug 'c9s/vimomni.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'vimwiki/vimwiki'
 if !has('nvim')
   Plug 'tpope/vim-sensible'
 endif
@@ -65,6 +64,10 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
 Plug 'HansPinckaers/ncm2-jedi'
+Plug 'ambv/black' " Python auto formatter
+Plug 'vyzyv/vimpyter' " Jupyter notebook editor
+"Plug 'tpope/vim-fugitive'
+Plug 'codeindulgence/vim-tig'
 if !has('nvim')
     Plug 'roxma/vim-hug-neovim-rpc'
 endif
@@ -129,7 +132,7 @@ set mouse=a
 if &term =~ '^screen'
     " tmux knows the extended mouse mode. This allows you to resize splits
     " with the mouse in xterm
-    set ttymouse=xterm2
+    "set ttymouse=xterm2
 endif
 
 """
@@ -223,7 +226,7 @@ nmap <Leader>a <Plug>(EasyAlign)
 " View
 """
 set lazyredraw
-set number
+"set number
 set cursorline
 "set laststatus=2 " Done by sensible
 "set ruler " Done by sensible
@@ -281,6 +284,8 @@ command! -bang -nargs=* Rg
   \   <bang>0 ? fzf#vim#with_preview('up:60%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
+command! -bang -nargs=* BTags call fzf#vim#buffer_tags(<q-args>, {'options': '--no-sort'}, <bang>0)
+command! -bang -nargs=* Tags call fzf#vim#buffer_tags(<q-args>, {'options': '--no-sort'}, <bang>0)
 
 function! MyFZF(options)
     call fzf#run(extend({'down': '40%', 'options': '-m', 'sink': 'e'}, a:options, 'force'))
@@ -331,6 +336,8 @@ endif
 " git
 """
 
+"command! Tig tabedit term://tig | startinsert
+
 """
 " NetLogo
 """
@@ -350,12 +357,6 @@ set backupdir=~/.config/nvim/backup//
 set directory=~/.config/nvim/swap//
 set undodir=~/.config/nvim/undo//
 nnoremap <leader>u :UndotreeToggle<CR>
-
-"""
-" Vimwiki
-"""
-let g:vimwiki_list = [{'path': '~/MEGAsync/notes/',
-			\ 'path_html': '~/MEGAsync/notes_html/'}]
 
 """
 " Codi
