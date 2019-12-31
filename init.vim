@@ -99,7 +99,7 @@ autocmd BufWritePre * %s/\s\+$//e
 " Don't think this is needed anymore
 "nnoremap <leader>ll :syntax off<cr>:syntax on<cr>
 
-set clipboard=unnamed ",unnamedplus
+set clipboard+=unnamedplus
 
 """
 " Window/Tmux navigation
