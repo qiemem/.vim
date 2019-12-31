@@ -43,7 +43,7 @@ Plug 'tpope/vim-speeddating'
 Plug 'metakirby5/codi.vim'
 Plug 'chrisbra/improvedft'
 Plug 'vim-voom/VOoM'
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 "Plug 'neomake/neomake'
 "Plug 'vim-pandoc/vim-pandoc'
@@ -71,8 +71,10 @@ Plug 'codeindulgence/vim-tig'
 if !has('nvim')
     Plug 'roxma/vim-hug-neovim-rpc'
 endif
+Plug 'psf/black'
 "Plug 'terryma/vim-smooth-scroll'
 "Plug 'yuttie/comfortable-motion.vim'
+"Plug 'liuchengxu/vim-which-key'
 
 call plug#end()
 
@@ -86,6 +88,8 @@ endif
 
 let mapleader = " "
 let maplocalleader = " "
+"nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+"set timeoutlen=100
 set tags=./tags,tags;$HOME
 
 " Delete trailing whitespace on save
@@ -291,7 +295,6 @@ function! MyFZF(options)
     call fzf#run(extend({'down': '40%', 'options': '-m', 'sink': 'e'}, a:options, 'force'))
 endfunction
 
-"let g:fzf_layout = { 'up': '~40%' }
 autocmd! FileType fzf
 autocmd  FileType fzf set laststatus=0 noshowmode noruler
             \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
