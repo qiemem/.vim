@@ -28,7 +28,7 @@ Plug 'godlygeek/tabular'
 Plug 'tpope/vim-sleuth'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'qiemem/grepop'
-Plug 'qpkorr/vim-bufkill'
+"Plug 'qpkorr/vim-bufkill'
 Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'nathanaelkane/vim-indent-guides'
@@ -75,6 +75,9 @@ Plug 'psf/black'
 "Plug 'terryma/vim-smooth-scroll'
 "Plug 'yuttie/comfortable-motion.vim'
 "Plug 'liuchengxu/vim-which-key'
+Plug 'yuki-ycino/fzf-preview.vim'
+Plug 'bogado/file-line'
+Plug 'Shougo/neomru.vim'
 
 call plug#end()
 
@@ -299,17 +302,19 @@ autocmd! FileType fzf
 autocmd  FileType fzf set laststatus=0 noshowmode noruler
             \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
-noremap <leader>ff :Files<CR>
-noremap <leader>fb :Buffers<CR>
-noremap <leader>/ :execute 'Rg ' . input('Rg/')<CR>
-noremap <leader>fl :Lines<CR>
+noremap <leader>ff :FzfPreviewProjectFiles<CR>
+noremap <leader>fb :FzfPreviewBuffers<CR>
+"noremap <leader>/ :execute 'Rg ' . input('Rg/')<CR>
+noremap <leader>/ :FzfPreviewProjectGrep . input('Grep/')<CR>
+noremap <leader>fl :FzfPreviewProjectGrep<CR>
 noremap <leader>f/ :BLines<CR>
 noremap <leader>fm :Marks<CR>
-noremap <leader>fr :History<CR>
+noremap <leader>fr :FzfPreviewMruFiles<CR>
+noremap <leader>fe :FzfPreviewProjectMruFiles<CR>
 noremap <leader>f: :History:<CR>
 noremap <leader>fc :Commands<CR>
 noremap <leader>fa :call MyFZF({'source': 'rg -u -l'})<CR>
-noremap <leader>fg :GitFiles<CR>
+noremap <leader>fg :FzfPreviewGitFiles<CR>
 noremap <leader>ft :Tags<CR>
 noremap <leader>fj :BTags<CR>
 
