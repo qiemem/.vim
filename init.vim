@@ -40,8 +40,9 @@ if !has('nvim')
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 Plug 'c9s/vimomni.vim' " for viml
-Plug 'ncm2/ncm2'
-Plug 'ncm2/ncm2-pyclang'
+"Plug 'ncm2/ncm2'
+"Plug 'ncm2/ncm2-pyclang'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 """
 " File management
@@ -51,6 +52,7 @@ Plug 'bogado/file-line'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'yuki-ycino/fzf-preview.vim'
+Plug 'laher/fuzzymenu.vim'
 Plug 'Shougo/neomru.vim'
 
 
@@ -175,14 +177,16 @@ set wildignorecase
 set completeopt=menuone,noselect,noinsert
 set wildignore+=*.so,*.swp,*.zip,*.class
 
-let g:completor_python_binary = '/usr/local/bin/python3'
+call coc#add_extension('coc-json', 'coc-tsserver', 'coc-python')
 
-autocmd BufEnter * call ncm2#enable_for_buffer()
-set shortmess+=c
-inoremap <c-c> <ESC>
-" make it fast
-let ncm2#popup_delay = 5
-let ncm2#complete_length = [[1, 1]]
+"let g:completor_python_binary = '/usr/local/bin/python3'
+"
+"autocmd BufEnter * call ncm2#enable_for_buffer()
+"set shortmess+=c
+"inoremap <c-c> <ESC>
+"" make it fast
+"let ncm2#popup_delay = 5
+"let ncm2#complete_length = [[1, 1]]
 
 """
 " Quickfix
@@ -293,6 +297,15 @@ noremap <leader>fg :FzfPreviewGitFiles<CR>
 noremap <leader>ft :Tags<CR>
 noremap <leader>fj :BTags<CR>
 
+if &rtp =~ 'fuzzymenu.vim'
+  if &rtp =~ 'fzf-preview.vim'
+    call fuzzymenu#Add('Open project file (preview)', {'exec': 'FzfPreviewProjectFiles'})
+    call fuzzymenu#Add('Buffers (preview)', {'exec': 'FzfPreviewBuffers'})
+    call fuzzymenu#Add('Interactive grep in project (preview)', {'exec': 'FzfPreviewProjectGrep ".*"', 'after': 'call fuzzymenu#InsertMode()'})
+    call fuzzymenu#Add('Grep in project (preview)', {'exec': 'FzfPreviewProjectGrep . input("Grep/")', 'after': 'call fuzzymenu#InsertMode()'})
+  endif
+endif
+
 imap <C-x><C-l> <plug>(fzf-complete-line)
 
 set wildignore+=*.swp,*/target/*
@@ -365,6 +378,6 @@ let g:jedi#smart_auto_mappings = 0
 let g:jedi#popup_on_dot = 0
 let g:jedi#completions_command = ""
 let g:jedi#show_call_signatures = "1"
-
+let g:slime_target = "tmux"
 
 
