@@ -167,6 +167,11 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
 """
+" JS formatting
+"""
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+"""
 " Autocomplete
 """
 set wildmode=longest:full,full
@@ -177,7 +182,12 @@ set wildignorecase
 set completeopt=menuone,noselect,noinsert
 set wildignore+=*.so,*.swp,*.zip,*.class
 
-call coc#add_extension('coc-json', 'coc-tsserver', 'coc-python')
+let g:coc_global_extensions = ['coc-json', 'coc-tsserver', 'coc-python', 'coc-prettier', 'coc-css']
+" COC config
+if filereadable($HOME . "/.config/nvim/cocrc.vim")
+  source ~/.config/nvim/cocrc.vim
+endif
+
 
 "let g:completor_python_binary = '/usr/local/bin/python3'
 "

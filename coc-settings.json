@@ -1,0 +1,14 @@
+{
+  "diagnostic.errorSign": "✘",
+  "diagnostic.warningSign": "",
+  "diagnostic.infoSign": "",
+	"suggest.noselect": false,
+	"suggest.minTriggerInputLength": 2,
+	"suggest.snippetIndicator": "►",
+  "suggest.maxCompleteItemCount": 12,
+  "coc.preferences.formatOnSaveFiletypes": ["html", "css", "scss", "markdown", "javascript", "typescript", "javascriptreact", "typescriptreact"],
+  "prettier.requireConfig": true,
+  "typescript.suggest.completeFunctionCalls": false,
+  "javascript.suggest.completeFunctionCalls": false
+}
+
