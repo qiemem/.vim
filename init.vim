@@ -40,8 +40,6 @@ if !has('nvim')
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 Plug 'c9s/vimomni.vim' " for viml
-"Plug 'ncm2/ncm2'
-"Plug 'ncm2/ncm2-pyclang'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 """
@@ -49,10 +47,8 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 """
 Plug 'scrooloose/nerdtree'
 Plug 'bogado/file-line'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': '-> fzf#install()' }
 Plug 'junegunn/fzf.vim'
-Plug 'yuki-ycino/fzf-preview.vim'
-Plug 'laher/fuzzymenu.vim'
 Plug 'Shougo/neomru.vim'
 
 
@@ -77,15 +73,11 @@ Plug 'codeindulgence/vim-tig'
 """
 " Linting
 """
-Plug 'dense-analysis/ale'
+" Using COC for all linting purposes now
 
 """
 " Python
 """
-Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
-Plug 'psf/black', { 'for': 'python', 'tag': '*' }
-Plug 'davidhalter/jedi-vim', { 'for': 'python' }
-Plug 'HansPinckaers/ncm2-jedi', { 'for': 'python' }
 Plug 'jpalardy/vim-slime', { 'for': 'python' }
 Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
 
@@ -182,7 +174,7 @@ set wildignorecase
 set completeopt=menuone,noselect,noinsert
 set wildignore+=*.so,*.swp,*.zip,*.class
 
-let g:coc_global_extensions = ['coc-json', 'coc-tsserver', 'coc-python', 'coc-prettier', 'coc-css']
+let g:coc_global_extensions = ['coc-json', 'coc-tsserver', 'coc-python', 'coc-prettier', 'coc-css', 'coc-clangd']
 " COC config
 if filereadable($HOME . "/.config/nvim/cocrc.vim")
   source ~/.config/nvim/cocrc.vim
@@ -271,54 +263,35 @@ let g:indent_guides_auto_colors = 0
 let g:pandoc#syntax#conceal#use = 0
 
 """
-" Jumping
+" Fzf
 """
 
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
-command! -bang -nargs=* BTags call fzf#vim#buffer_tags(<q-args>, {'options': '--no-sort'}, <bang>0)
-command! -bang -nargs=* Tags call fzf#vim#buffer_tags(<q-args>, {'options': '--no-sort'}, <bang>0)
+let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.3, 'yoffset': 0.0 } }
+let g:fzf_command_prefix = 'Fzf'
 
-function! MyFZF(options)
-    call fzf#run(extend({'down': '40%', 'options': '-m', 'sink': 'e'}, a:options, 'force'))
-endfunction
+"let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.2, 'style': 'minimal', 'anchor': 'S' } }
+"
+command! -bang -nargs=* FzfAllFiles
+            \ call fzf#vim#grep(
+            \   'rg --smart-case -l -uu -- ""', 0,
+            \   fzf#vim#with_preview(), <bang>0)
 
-autocmd! FileType fzf
-autocmd  FileType fzf set laststatus=0 noshowmode noruler
-            \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-
-noremap <leader>ff :FzfPreviewProjectFiles<CR>
-noremap <leader>fb :FzfPreviewBuffers<CR>
-"noremap <leader>/ :execute 'Rg ' . input('Rg/')<CR>
-noremap <leader>/ :FzfPreviewProjectGrep . input('Grep/')<CR>
-noremap <leader>fl :FzfPreviewProjectGrep '.*'<CR>
-noremap <leader>f/ :BLines<CR>
-noremap <leader>fm :Marks<CR>
-noremap <leader>fr :FzfPreviewMruFiles<CR>
-noremap <leader>fe :FzfPreviewProjectMruFiles<CR>
-noremap <leader>f: :History:<CR>
-noremap <leader>fc :Commands<CR>
-noremap <leader>fa :call MyFZF({'source': 'rg -u -l'})<CR>
-noremap <leader>fg :FzfPreviewGitFiles<CR>
-noremap <leader>ft :Tags<CR>
-noremap <leader>fj :BTags<CR>
-
-if &rtp =~ 'fuzzymenu.vim'
-  if &rtp =~ 'fzf-preview.vim'
-    call fuzzymenu#Add('Open project file (preview)', {'exec': 'FzfPreviewProjectFiles'})
-    call fuzzymenu#Add('Buffers (preview)', {'exec': 'FzfPreviewBuffers'})
-    call fuzzymenu#Add('Interactive grep in project (preview)', {'exec': 'FzfPreviewProjectGrep ".*"', 'after': 'call fuzzymenu#InsertMode()'})
-    call fuzzymenu#Add('Grep in project (preview)', {'exec': 'FzfPreviewProjectGrep . input("Grep/")', 'after': 'call fuzzymenu#InsertMode()'})
-  endif
-endif
+nmap <Leader>f [fzf]
+noremap <leader>/ :execute 'FzfRg ' . input('Rg/')<CR>
+noremap <silent> <Leader><Leader> :FzfCommands<CR>
+noremap <silent> [fzf]f :FzfFiles<CR>
+noremap <silent> [fzf]b :FzfBuffer<CR>
+noremap          [fzf]l :FzfRg<CR>
+noremap <silent> [fzf]/ :FzfBLines<CR>
+noremap <silent> [fzf]m :FzfMarks<CR>
+noremap <silent> [fzf]r :FzfHistory<CR>
+noremap <silent> [fzf]: :FzfHistory:<CR>
+noremap <silent> [fzf]a :FzfAllFiles<CR>
+noremap <silent> [fzf]g :FzfGFiles<CR>
+noremap <silent> [fzf]t :FzfTags<CR>
+noremap <silent> [fzf]j :FzfBTags<CR>
 
 imap <C-x><C-l> <plug>(fzf-complete-line)
-
-set wildignore+=*.swp,*/target/*
 
 """
 " Searching
@@ -368,8 +341,7 @@ nnoremap <leader>u :UndotreeToggle<CR>
 " Syntax checking
 """
 
-nnoremap <leader>an :ALENextWrap<CR>
-nnoremap <leader>ap :ALEPreviousWrap<CR>
+" This is done by COC now
 
 """
 " Focusing
@@ -380,14 +352,7 @@ let g:goyo_linenr=1
 """
 " Python
 """
-let g:jedi#force_py_version = 3
-let g:jedi#completions_enabled = 0
-let g:jedi#auto_initialization = 1
-let g:jedi#auto_vim_configuration = 0
-let g:jedi#smart_auto_mappings = 0
-let g:jedi#popup_on_dot = 0
-let g:jedi#completions_command = ""
-let g:jedi#show_call_signatures = "1"
 let g:slime_target = "tmux"
+let g:slime_default_config = {"socket_name": "default", "target_pane": "{last}"}
 
-
+nnoremap <leader>pr :IPythonCellExecuteCellVerboseJump<CR>
