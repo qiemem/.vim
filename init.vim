@@ -41,6 +41,7 @@ if !has('nvim')
 endif
 Plug 'c9s/vimomni.vim' " for viml
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'antoinemadec/coc-fzf'
 
 """
 " File management
@@ -174,36 +175,18 @@ set wildignorecase
 set completeopt=menuone,noselect,noinsert
 set wildignore+=*.so,*.swp,*.zip,*.class
 
-let g:coc_global_extensions = ['coc-json', 'coc-tsserver', 'coc-python', 'coc-prettier', 'coc-css', 'coc-clangd']
+let g:coc_global_extensions = [
+      \ 'coc-json',
+      \ 'coc-tsserver',
+      \ 'coc-python',
+      \ 'coc-prettier',
+      \ 'coc-css',
+      \ 'coc-clangd',
+      \]
 " COC config
 if filereadable($HOME . "/.config/nvim/cocrc.vim")
   source ~/.config/nvim/cocrc.vim
 endif
-
-
-"let g:completor_python_binary = '/usr/local/bin/python3'
-"
-"autocmd BufEnter * call ncm2#enable_for_buffer()
-"set shortmess+=c
-"inoremap <c-c> <ESC>
-"" make it fast
-"let ncm2#popup_delay = 5
-"let ncm2#complete_length = [[1, 1]]
-
-"""
-" Quickfix
-"""
-
-let g:ale_linters = {
-\   'pandoc': ['proselint'],
-\   'cpp': ['clang'],
-\}
-"autocmd BufEnter *.cpp,*.h,*.hpp,*.hxx let g:ale_cpp_clang_options = join(ncm_clang#compilation_info()['args'], ' ')
-let g:ncm2_pyclang#library_path='/usr/lib64/libclang.so.9'
-
-
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 0
 
 """
 " Simple mappings
@@ -266,7 +249,8 @@ let g:pandoc#syntax#conceal#use = 0
 " Fzf
 """
 
-let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.3, 'yoffset': 0.0 } }
+let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.5, 'yoffset': 0.0 } }
+let g:fzf_preview_window = 'up:50%'
 let g:fzf_command_prefix = 'Fzf'
 
 "let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.2, 'style': 'minimal', 'anchor': 'S' } }
@@ -290,6 +274,13 @@ noremap <silent> [fzf]a :FzfAllFiles<CR>
 noremap <silent> [fzf]g :FzfGFiles<CR>
 noremap <silent> [fzf]t :FzfTags<CR>
 noremap <silent> [fzf]j :FzfBTags<CR>
+
+nmap <Leader>c [coc]
+noremap <silent> [coc] :CocFzfList<CR>
+noremap <silent> [coc]c :CocFzfList commands<CR>
+noremap <silent> [coc]a :CocFzfList actions<CR>
+noremap <silent> [coc]a :CocFzfList actions<CR>
+xnoremap <silent> [coc]a :CocFzfList actions<CR>
 
 imap <C-x><C-l> <plug>(fzf-complete-line)
 
