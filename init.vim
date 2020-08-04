@@ -46,7 +46,9 @@ Plug 'antoinemadec/coc-fzf'
 """
 " File management
 """
-Plug 'scrooloose/nerdtree'
+"Plug 'scrooloose/nerdtree'
+Plug 'ryanoasis/vim-devicons'
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': ':UpdateRemotePlugins'}
 Plug 'bogado/file-line'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': '-> fzf#install()' }
 Plug 'junegunn/fzf.vim'
@@ -149,7 +151,8 @@ endif
 " Buffer Behavior
 """
 set hidden	"Abondaned buffers are hidden instead of destroyed
-noremap <Leader>t :NERDTreeToggle<CR>
+"noremap <Leader>t :NERDTreeToggle<CR>
+noremap <Leader>t :CHADopen<CR>
 noremap <leader>bk :bp<bar>bd#<CR>
 
 
@@ -182,6 +185,7 @@ let g:coc_global_extensions = [
       \ 'coc-prettier',
       \ 'coc-css',
       \ 'coc-clangd',
+      \ 'coc-metals',
       \]
 " COC config
 if filereadable($HOME . "/.config/nvim/cocrc.vim")
