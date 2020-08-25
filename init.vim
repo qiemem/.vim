@@ -72,6 +72,7 @@ Plug 'tpope/vim-sleuth' " Autodetects indentation settings of file
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'christoomey/vim-tmux-navigator' " Allows moving to tmux panes
 Plug 'codeindulgence/vim-tig'
+Plug 'tpope/vim-fugitive'
 
 """
 " Linting
